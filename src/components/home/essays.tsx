@@ -13,7 +13,7 @@ type EssaysSectionProps = {
 export function EssaysSection({ data, essays }: EssaysSectionProps) {
   const section = data || {
     eyebrow: "Recent blogs",
-    title: "Blogs",
+    title: "Essays",
     description:
       "Recent articles, insights and commentary on markets, business, behaviour and public policy.",
   };
