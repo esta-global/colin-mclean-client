@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5201/api/v1";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://colin-mclean-api.esta-dev.com/api/v1";
 
 export function ContactForm() {
   const [loading, setLoading] = useState(false);
