@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://colin-mclean-api.esta-dev.com/api/v1";
+import { buildApiUrl } from "@/lib/api-config";
 
 export function ContactForm() {
   const [loading, setLoading] = useState(false);
@@ -23,7 +22,7 @@ export function ContactForm() {
     };
 
     try {
-      const response = await fetch(`${API_BASE_URL}/contact-inquiries`, {
+      const response = await fetch(buildApiUrl("/contact-inquiries"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

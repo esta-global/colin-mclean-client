@@ -5,8 +5,7 @@ import {
   type LecturePreview,
 } from "@/content/home";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://colin-mclean-api.esta-dev.com/api/v1";
+import { API_BASE_URL, buildApiUrl } from "./api-config";
 
 export function resolveImageUrl(image?: string, fallback = "/images/hero.webp"): string {
   if (!image || typeof image !== "string" || !image.trim()) return fallback;
@@ -20,22 +19,23 @@ export function resolveImageUrl(image?: string, fallback = "/images/hero.webp"):
     return trimmed;
   }
 
-  const apiHost = API_BASE_URL.replace(/\/api\/v1\/?$/, "");
-
-  if (trimmed.startsWith("/uploads/")) {
-    return `${apiHost}${trimmed}`;
-  }
-  if (trimmed.startsWith("uploads/")) {
-    return `${apiHost}/${trimmed}`;
-  }
-
-  // Local static asset in public folder
+  // Local static asset in public folder (e.g. /images/... or /uploads/...)
   if (trimmed.startsWith("/")) {
     return trimmed;
   }
 
-  return `${apiHost}/uploads/${trimmed}`;
+  const cleanFilename = trimmed.replace(/^uploads\//, "");
+
+  // If a remote file URL is explicitly configured, use it
+  if (process.env.NEXT_PUBLIC_FILE_URL) {
+    const customHost = process.env.NEXT_PUBLIC_FILE_URL.replace(/\/+$/, "");
+    return `${customHost}/${cleanFilename}`;
+  }
+
+  // Serve from public uploads folder
+  return `/uploads/${cleanFilename}`;
 }
+
 
 export interface HomepageData {
   heroSection: {
@@ -148,9 +148,9 @@ export const fallbackHomepageData: HomepageData = {
 export async function fetchHomepageData(): Promise<HomepageData> {
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 3500);
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-    const res = await fetch(`${API_BASE_URL}/homepage`, {
+    const res = await fetch(buildApiUrl("/homepage"), {
       next: { revalidate: 60 },
       signal: controller.signal,
     });

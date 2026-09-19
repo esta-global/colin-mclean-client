@@ -2,8 +2,7 @@ import type { WritingPost } from "@/content/writing";
 import { getCategoryBySlug, CategoryMeta } from "@/content/category-data";
 import { resolveImageUrl } from "./homepage-service";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://colin-mclean-api.esta-dev.com/api/v1";
+import { buildApiUrl } from "./api-config";
 
 export interface ApiBlogItem {
   _id: string;
@@ -66,15 +65,15 @@ export async function fetchAllBlogs(options?: {
 }): Promise<WritingPost[]> {
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000);
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
     const limit = options?.limit ?? 50;
-    let url = `${API_BASE_URL}/blogs?status=true&limit=${limit}`;
+    let path = `/blogs?status=true&limit=${limit}`;
     if (options?.featured) {
-      url += `&featured=true`;
+      path += `&featured=true`;
     }
 
-    const res = await fetch(url, {
+    const res = await fetch(buildApiUrl(path), {
       next: { revalidate: 60 },
       signal: controller.signal,
     });
@@ -100,10 +99,10 @@ export async function fetchCategoryBlogs(
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000);
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
     const res = await fetch(
-      `${API_BASE_URL}/blogs?categorySlug=${encodeURIComponent(targetDbSlug)}&status=true&limit=50`,
+      buildApiUrl(`/blogs?categorySlug=${encodeURIComponent(targetDbSlug)}&status=true&limit=50`),
       {
         next: { revalidate: 60 },
         signal: controller.signal,
@@ -131,10 +130,10 @@ export async function fetchCategoryDetails(
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 3500);
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
     const res = await fetch(
-      `${API_BASE_URL}/blogCategories/findBySlug/${encodeURIComponent(targetDbSlug)}`,
+      buildApiUrl(`/blogCategories/findBySlug/${encodeURIComponent(targetDbSlug)}`),
       {
         next: { revalidate: 60 },
         signal: controller.signal,
@@ -172,10 +171,10 @@ export async function fetchBlogPostBySlug(
 ): Promise<WritingPost | undefined> {
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 3500);
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
     const res = await fetch(
-      `${API_BASE_URL}/blogs/slug/${encodeURIComponent(slug)}`,
+      buildApiUrl(`/blogs/slug/${encodeURIComponent(slug)}`),
       {
         next: { revalidate: 60 },
         signal: controller.signal,

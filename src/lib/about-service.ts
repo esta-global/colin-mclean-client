@@ -1,7 +1,5 @@
 import { resolveImageUrl } from "./homepage-service";
-
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://colin-mclean-api.esta-dev.com/api/v1";
+import { buildApiUrl } from "./api-config";
 
 export interface AboutPageData {
   title: string;
@@ -35,9 +33,9 @@ export const fallbackAboutData: AboutPageData = {
 export async function fetchAboutPageData(): Promise<AboutPageData> {
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 3500);
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-    const res = await fetch(`${API_BASE_URL}/aboutPage`, {
+    const res = await fetch(buildApiUrl("/aboutPage"), {
       next: { revalidate: 60 },
       signal: controller.signal,
     });

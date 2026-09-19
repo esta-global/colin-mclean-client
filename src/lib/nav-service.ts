@@ -1,7 +1,5 @@
 import { categoriesData, CategoryMeta } from "@/content/category-data";
-
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://colin-mclean-api.esta-dev.com/api/v1";
+import { buildApiUrl } from "./api-config";
 
 export interface NavItem {
   label: string;
@@ -25,9 +23,9 @@ export interface DynamicCategoryItem {
 export async function fetchDynamicCategories(): Promise<DynamicCategoryItem[]> {
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 3500);
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-    const res = await fetch(`${API_BASE_URL}/blogCategories?status=true&limit=100`, {
+    const res = await fetch(buildApiUrl("/blogCategories?status=true&limit=100"), {
       next: { revalidate: 60 },
       signal: controller.signal,
     });
