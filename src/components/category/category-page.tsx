@@ -88,7 +88,6 @@ export function CategoryPage({
           fill
           priority
           sizes="100vw"
-          unoptimized={category.image?.startsWith("http")}
         />
         <div className="writing-hero-shade" />
         <div className="writing-hero-content container">
@@ -101,7 +100,6 @@ export function CategoryPage({
           </h1>
           <p>
             {category.subheading ||
-              category.description ||
               `Insights and perspectives from Colin McLean on ${category.name.toLowerCase()}, investing, economics and society.`}
           </p>
           <a href="#latest-posts" className="button">

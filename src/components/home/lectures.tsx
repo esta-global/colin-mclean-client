@@ -33,29 +33,72 @@ export function LecturesSection({ data }: LecturesSectionProps) {
           id="lectures-title"
         />
         <div className="lecture-grid">
-          {items.map((lecture) => (
-            <article key={lecture.href} className="lecture-card">
-              <div className="lecture-image">
-                <Image
-                  src={lecture.image}
-                  alt={lecture.title}
-                  fill
-                  sizes="(max-width: 760px) 100vw, 20vw"
-                />
-              </div>
-              <div className="lecture-card-body">
-                <p className="lecture-number">
-                  <span />
-                  {lecture.number}
-                </p>
-                <h3>{lecture.title}</h3>
-                <p>{lecture.description}</p>
-                <Link href={lecture.href} className="text-link">
-                  Explore lecture <Arrow />
-                </Link>
-              </div>
-            </article>
-          ))}
+          {items.map((lecture) => {
+            const isPdf = Boolean(lecture.pdfUrl || lecture.href.endsWith(".pdf"));
+            const targetLink = lecture.pdfUrl || lecture.href;
+
+            return (
+              <article key={lecture.number} className="lecture-card">
+                <div className="lecture-image">
+                  {isPdf ? (
+                    <a
+                      href={targetLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="lecture-image-link"
+                      aria-label={`Open ${lecture.title} PDF`}
+                    >
+                      <Image
+                        src={lecture.image}
+                        alt={lecture.title}
+                        fill
+                        sizes="(max-width: 760px) 100vw, 20vw"
+                      />
+                    </a>
+                  ) : (
+                    <Link
+                      href={lecture.href}
+                      className="lecture-image-link"
+                      aria-label={`Explore ${lecture.title}`}
+                    >
+                      <Image
+                        src={lecture.image}
+                        alt={lecture.title}
+                        fill
+                        sizes="(max-width: 760px) 100vw, 20vw"
+                      />
+                    </Link>
+                  )}
+                </div>
+                <div className="lecture-card-body">
+                  <p className="lecture-number">
+                    <span />
+                    {lecture.number}
+                  </p>
+                  <h3>
+                    {isPdf ? (
+                      <a
+                        href={targetLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="lecture-title-link"
+                      >
+                        {lecture.title}
+                      </a>
+                    ) : (
+                      <Link href={lecture.href} className="lecture-title-link">
+                        {lecture.title}
+                      </Link>
+                    )}
+                  </h3>
+                  <p>{lecture.description}</p>
+                    <Link href={targetLink} className="text-link">
+                      Explore lecture <Arrow />
+                    </Link>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

@@ -837,6 +837,69 @@ button {
   margin-top: 1rem;
 }
 
+.lecture-image-link {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.lecture-image-link img {
+  transition: transform 0.3s ease;
+}
+
+.lecture-card:hover .lecture-image-link img {
+  transform: scale(1.04);
+}
+
+.lecture-title-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.lecture-title-link:hover {
+  color: #bd921e;
+}
+
+.lecture-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.lecture-actions .text-link {
+  margin-top: 0;
+}
+
+.lecture-btn-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  background-color: #f7f5ee;
+  border: 1px solid #dcd7c4;
+  color: #1d211c;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.lecture-btn-download:hover {
+  background-color: #bd921e;
+  border-color: #bd921e;
+  color: #ffffff;
+}
+
+.lecture-btn-download svg {
+  flex-shrink: 0;
+}
+
 @media (max-width: 68rem) {
   .home-hero h1 {
     max-width: 9.5ch;

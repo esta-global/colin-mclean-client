@@ -22,6 +22,8 @@ export type LecturePreview = {
   image: string;
   imageAlt: string;
   href: string;
+  pdfUrl?: string;
+  downloadName?: string;
 };
 
 export const perspectives: Perspective[] = [
@@ -100,6 +102,8 @@ export const lectures: LecturePreview[] = [
     description: "Key trends and what they mean for investors.",
     image: "/images/lecture-behaviour.png",
     imageAlt: "Financial market chart",
-    href: "/lectures/current-topics-in-investment",
+    href: "/documents/current-topics-in-investment.pdf",
+    pdfUrl: "/documents/current-topics-in-investment.pdf",
+    downloadName: "current-topics-in-investment.pdf",
   },
 ];

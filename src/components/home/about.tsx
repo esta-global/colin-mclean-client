@@ -44,15 +44,17 @@ export function AboutSection({ data }: AboutSectionProps) {
           {about.credential && (
             <div className="about-credential">
               <p>{about.credential}</p>
-              <div className="flex items-center gap-3 mt-4">
-                <Image
-                  src="/images/linkedin.svg"
-                  alt="Colin McLean"
-                  width={20}
-                  height={20}
-                />
-                <span>Colin McLean</span>
-              </div>
+              <Link href="https://linkedin.com/in/colin-w-mclean" target="_blank" className="cursor-pointer">
+                <div className="flex items-center gap-3 mt-4">
+                  <Image
+                    src="/images/linkedin.svg"
+                    alt="Colin McLean"
+                    width={20}
+                    height={20}
+                  />
+                  <span>Colin McLean</span>
+                </div>
+              </Link>
             </div>
           )}
           <Link href={about.buttonLink || "/about"} className="button">

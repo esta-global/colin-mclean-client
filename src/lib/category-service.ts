@@ -196,51 +196,30 @@ export async function fetchCategoryDetails(
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-    let res = await fetch(
+    const res = await fetch(
       buildApiUrl(`/blogCategories/findBySlug/${encodeURIComponent(targetDbSlug)}`),
       {
         next: { revalidate: 60 },
         signal: controller.signal,
       }
     );
-
-    if (!res.ok && targetDbSlug !== slug) {
-      res = await fetch(
-        buildApiUrl(`/blogCategories/findBySlug/${encodeURIComponent(slug)}`),
-        {
-          next: { revalidate: 60 },
-          signal: controller.signal,
-        }
-      );
-    }
-
     clearTimeout(timeoutId);
 
     if (res.ok) {
       const data = await res.json();
       const apiCat = data?.body;
-      if (apiCat && (apiCat.name || apiCat.slug)) {
-        const catDescription =
-          apiCat.subheading ||
-          apiCat.shortDescription ||
-          baseMeta?.subheading ||
-          "";
-
+      if (apiCat && apiCat.name) {
         return {
           id: baseMeta?.id || apiCat.slug || slug,
           name: apiCat.name || baseMeta?.name || slug,
           slug: baseMeta?.slug || apiCat.slug || slug,
           dbSlug: apiCat.slug || targetDbSlug,
           aliases: baseMeta?.aliases || [slug],
-          heading: apiCat.heading || baseMeta?.heading || apiCat.name || slug,
-          subheading: catDescription,
-          description: catDescription,
+          heading: apiCat.heading || baseMeta?.heading || apiCat.name,
+          subheading: apiCat.subheading || baseMeta?.subheading || "",
           eyebrow: apiCat.eyebrow || baseMeta?.eyebrow || "Category",
-          image: resolveImageUrl(
-            apiCat.image,
-            baseMeta?.image || "/images/investment.png"
-          ),
-          imageAlt: baseMeta?.imageAlt || apiCat.heading || apiCat.name || slug,
+          image: resolveImageUrl(apiCat.image, baseMeta?.image || "/images/investment.png"),
+          imageAlt: baseMeta?.imageAlt || apiCat.name,
         };
       }
     }

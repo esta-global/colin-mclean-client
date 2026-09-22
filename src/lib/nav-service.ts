@@ -12,7 +12,6 @@ export interface DynamicCategoryItem {
   slug: string;
   heading?: string;
   subheading?: string;
-  shortDescription?: string;
   eyebrow?: string;
   image?: string;
   priority?: number;
