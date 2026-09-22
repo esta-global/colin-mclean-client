@@ -5,35 +5,35 @@ import {
   type LecturePreview,
 } from "@/content/home";
 
-import { API_BASE_URL, buildApiUrl } from "./api-config";
+import { API_BASE_URL, FILE_BASE_URL, buildApiUrl } from "./api-config";
 
 export function resolveImageUrl(image?: string, fallback = "/images/hero.webp"): string {
   if (!image || typeof image !== "string" || !image.trim()) return fallback;
   const trimmed = image.trim();
 
+  // Full URLs, base64 data URIs, or blob URIs
   if (
     trimmed.startsWith("http://") ||
     trimmed.startsWith("https://") ||
-    trimmed.startsWith("data:")
+    trimmed.startsWith("data:") ||
+    trimmed.startsWith("blob:")
   ) {
     return trimmed;
   }
 
-  // Local static asset in public folder (e.g. /images/... or /uploads/...)
-  if (trimmed.startsWith("/")) {
-    return trimmed;
+  // Local static asset in public folder (e.g. /images/... or /favicon.ico)
+  // Note: /uploads/ is NOT a local asset; it belongs to the backend uploads server.
+  if (
+    (trimmed.startsWith("/") && !trimmed.startsWith("/uploads/")) ||
+    trimmed.startsWith("images/")
+  ) {
+    return trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
   }
 
-  const cleanFilename = trimmed.replace(/^uploads\//, "");
+  const cleanFilename = trimmed.replace(/^\/?uploads\//, "");
+  if (!cleanFilename) return fallback;
 
-  // If a remote file URL is explicitly configured, use it
-  if (process.env.NEXT_PUBLIC_FILE_URL) {
-    const customHost = process.env.NEXT_PUBLIC_FILE_URL.replace(/\/+$/, "");
-    return `${customHost}/${cleanFilename}`;
-  }
-
-  // Serve from public uploads folder
-  return `/uploads/${cleanFilename}`;
+  return `${FILE_BASE_URL}/${cleanFilename}`;
 }
 
 
@@ -125,10 +125,10 @@ export const fallbackHomepageData: HomepageData = {
     buttonLink: "/about",
   },
   essaysPreviewSection: {
-    eyebrow: "Recent blogs",
-    title: "Blogs",
+    eyebrow: "Recent writing",
+    title: "Essays",
     description:
-      "Recent articles, insights and commentary on markets, business, behaviour and public policy.",
+      "Recent articles, insights and commentary on markets, business,behaviour and public policy.",
   },
   lecturesSection: {
     eyebrow: "Lectures & speaking",
@@ -189,17 +189,12 @@ export async function fetchHomepageData(): Promise<HomepageData> {
             description:
               body.perspectivesSection?.description ||
               fallbackHomepageData.perspectivesSection.description,
-            items:
-              Array.isArray(body.perspectivesSection?.items) &&
-              body.perspectivesSection.items.length > 0
-                ? body.perspectivesSection.items
-                : fallbackHomepageData.perspectivesSection.items,
+            items: fallbackHomepageData.perspectivesSection.items,
           },
           topicsSection: {
             eyebrow:
               body.topicsSection?.eyebrow || fallbackHomepageData.topicsSection.eyebrow,
-            title:
-              body.topicsSection?.title || fallbackHomepageData.topicsSection.title,
+            title: fallbackHomepageData.topicsSection.title,
             description:
               body.topicsSection?.description ||
               fallbackHomepageData.topicsSection.description,
@@ -232,11 +227,15 @@ export async function fetchHomepageData(): Promise<HomepageData> {
           },
           essaysPreviewSection: {
             eyebrow:
-              body.essaysPreviewSection?.eyebrow ||
-              fallbackHomepageData.essaysPreviewSection.eyebrow,
+              body.essaysPreviewSection?.eyebrow &&
+              body.essaysPreviewSection.eyebrow.toLowerCase() !== "recent blogs"
+                ? body.essaysPreviewSection.eyebrow
+                : fallbackHomepageData.essaysPreviewSection.eyebrow,
             title:
-              body.essaysPreviewSection?.title ||
-              fallbackHomepageData.essaysPreviewSection.title,
+              body.essaysPreviewSection?.title &&
+              body.essaysPreviewSection.title.toLowerCase() !== "blogs"
+                ? body.essaysPreviewSection.title
+                : fallbackHomepageData.essaysPreviewSection.title,
             description:
               body.essaysPreviewSection?.description ||
               fallbackHomepageData.essaysPreviewSection.description,

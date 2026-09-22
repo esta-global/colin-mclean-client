@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Arrow } from "@/components/ui";
 import { SectionTitle } from "./section-title";
+import { essays as defaultEssays } from "@/content/home";
 import type { HomepageData } from "@/lib/homepage-service";
 import type { WritingPost } from "@/content/writing";
 
@@ -10,30 +11,33 @@ type EssaysSectionProps = {
   essays?: WritingPost[];
 };
 
-export function EssaysSection({ data, essays }: EssaysSectionProps) {
-  const section = data || {
-    eyebrow: "Recent blogs",
-    title: "Essays",
+export function EssaysSection({ data }: EssaysSectionProps) {
+  const section = {
+    eyebrow:
+      data?.eyebrow && data.eyebrow.toLowerCase() !== "recent blogs"
+        ? data.eyebrow
+        : "Recent writing",
+    title:
+      data?.title && data.title.toLowerCase() !== "blogs"
+        ? data.title
+        : "Essays",
     description:
-      "Recent articles, insights and commentary on markets, business, behaviour and public policy.",
+      data?.description ||
+      "Recent articles, insights and commentary on markets, business,behaviour and public policy.",
   };
 
-  const items = essays && essays.length > 0 ? essays.slice(0, 4) : [];
+  const items = defaultEssays;
 
   return (
     <section className="home-section essays-section" aria-labelledby="essays-title">
       <div className="container">
         <SectionTitle
-          eyebrow={section.eyebrow || "Recent blogs"}
-          title={section.title || "Blogs"}
-          description={
-            section.description ||
-            "Recent articles, insights and commentary on markets, business, behaviour and public policy."
-          }
+          eyebrow={section.eyebrow}
+          title={section.title}
+          description={section.description}
           id="essays-title"
         />
-        {items.length > 0 ? (
-          <div className="essay-grid">
+        <div className="essay-grid">
           {items.map((item) => {
             const paragraph = (item as any).paragraph || (item as any).excerpt || "";
             return (
@@ -71,15 +75,10 @@ export function EssaysSection({ data, essays }: EssaysSectionProps) {
               </article>
             );
           })}
-          </div>
-        ) : (
-          <div style={{ textAlign: "center", padding: "3rem 1rem", color: "var(--color-muted, #71717a)" }}>
-            <p>No blogs published yet.</p>
-          </div>
-        )}
+        </div>
         <div className="section-action">
           <Link href="/writing" className="button">
-            View all blogs <Arrow />
+            View all writing <Arrow />
           </Link>
         </div>
       </div>

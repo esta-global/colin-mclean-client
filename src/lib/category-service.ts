@@ -1,8 +1,8 @@
-import type { WritingPost } from "@/content/writing";
+import { getPostBySlug, type WritingPost } from "@/content/writing";
 import { getCategoryBySlug, CategoryMeta } from "@/content/category-data";
 import { resolveImageUrl } from "./homepage-service";
 
-import { buildApiUrl } from "./api-config";
+import { buildApiUrl, FILE_BASE_URL } from "./api-config";
 
 export interface ApiBlogItem {
   _id: string;
@@ -25,6 +25,14 @@ export interface ApiBlogItem {
   };
   type?: string;
   featured?: boolean;
+}
+
+function normalizeHtmlImages(html?: string): string | undefined {
+  if (!html) return undefined;
+  return html.replace(
+    /(<img[^>]+src=["'])(?:\/?uploads\/)([^"']+["'])/gi,
+    `$1${FILE_BASE_URL}/$2`
+  );
 }
 
 function formatDate(dateStr?: string): string {
@@ -55,7 +63,7 @@ function mapApiBlogToPost(item: ApiBlogItem, fallbackCatSlug = "economics"): Wri
       name: item.author?.name || "Colin McLean",
       avatar: resolveImageUrl(item.author?.profileImage, "/images/portrait.png"),
     },
-    htmlContent: item.content || undefined,
+    htmlContent: normalizeHtmlImages(item.content) || undefined,
   };
 }
 
@@ -193,5 +201,5 @@ export async function fetchBlogPostBySlug(
     // API unavailable
   }
 
-  return undefined;
+  return getPostBySlug(slug);
 }

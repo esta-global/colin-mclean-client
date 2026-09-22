@@ -97,6 +97,114 @@ export const featuredPost: WritingPost = {
 
 export const latestPosts: WritingPost[] = [
   {
+    slug: "companies-are-not-living",
+    title: "Sound analysis is key to the long term",
+    category: "Investing",
+    categoryHref: "/writing/economics",
+    excerpt: "A look at patience, compounding and avoiding short-term noise.",
+    date: "24 May 2025",
+    readingTime: "6 min read",
+    image: "/images/essay-markets.png",
+    imageAlt: "Financial chart with stacked coins",
+    href: "/writing/economics/companies-are-not-living",
+    author: {
+      name: "Colin McLean",
+      avatar: "/images/portrait.png",
+    },
+    content: {
+      lead: "Sound analysis and a patient outlook remain the cornerstone of successful long-term investing.",
+      sections: [
+        {
+          heading: "Patience and Compounding",
+          paragraphs: [
+            "Market volatility often tempts investors into unnecessary activity. Yet history shows that patience, sound fundamental analysis, and the discipline to let compounding work deliver the most durable outcomes.",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    slug: "us-trade-policy-and-the-debate-on-sustainable-growth",
+    title: "The economy: risks, resilience and reality",
+    category: "Economics",
+    categoryHref: "/writing/economics",
+    excerpt: "Observations on growth, inflation and where we go from here.",
+    date: "20 May 2025",
+    readingTime: "5 min read",
+    image: "/images/essay-economy.png",
+    imageAlt: "City skyline at sunset",
+    href: "/writing/economics/us-trade-policy-and-the-debate-on-sustainable-growth",
+    author: {
+      name: "Colin McLean",
+      avatar: "/images/portrait.png",
+    },
+    content: {
+      lead: "Navigating global economic risks requires balancing resilience with realistic expectations for sustainable growth.",
+      sections: [
+        {
+          heading: "Trade Policy and Growth",
+          paragraphs: [
+            "Observations on how trade tariffs, inflation trends, and structural shifts influence international markets and domestic prosperity.",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    slug: "behavioural-finance-the-risks-of-mixing-emotion-and-investments",
+    title: "Behavioural biases that influence decisions",
+    category: "Behavioural finance",
+    categoryHref: "/writing/economics",
+    excerpt: "Understanding the psychology behind smarter choices.",
+    date: "16 May 2025",
+    readingTime: "7 min read",
+    image: "/images/essay-behaviour.png",
+    imageAlt: "Chess pieces arranged on a board",
+    href: "/writing/economics/behavioural-finance-the-risks-of-mixing-emotion-and-investments",
+    author: {
+      name: "Colin McLean",
+      avatar: "/images/portrait.png",
+    },
+    content: {
+      lead: "Understanding the psychological traps of fear and greed is essential to making smarter financial decisions.",
+      sections: [
+        {
+          heading: "Recognising Cognitive Biases",
+          paragraphs: [
+            "From confirmation bias to loss aversion, our instincts can lead us astray when navigating complex investment landscapes.",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    slug: "scotlands-private-sector-health",
+    title: "Scotland’s economy and health",
+    category: "Scotland",
+    categoryHref: "/writing/economics",
+    excerpt: "current issues in health, society and education.",
+    date: "12 May 2025",
+    readingTime: "4 min read",
+    image: "/images/essay-scotland.png",
+    imageAlt: "Notebook and coffee on a desk",
+    href: "/writing/economics/scotlands-private-sector-health",
+    author: {
+      name: "Colin McLean",
+      avatar: "/images/portrait.png",
+    },
+    content: {
+      lead: "Examining the intersection of Scotland's economic productivity, private sector vitality, and public health challenges.",
+      sections: [
+        {
+          heading: "Current Issues in Health, Society and Education",
+          paragraphs: [
+            "A healthy population is the foundation of a thriving economy. Addressing the structural hurdles in public health and education is paramount for Scotland's future.",
+          ],
+        },
+      ],
+    },
+  },
+  {
     slug: "simple-habits-that-improved-my-financial-life",
     title: "7 Simple Habits That Improved My Financial Life",
     category: "Personal finance",

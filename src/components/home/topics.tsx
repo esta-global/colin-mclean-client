@@ -20,23 +20,15 @@ export function TopicsSection({ data, categories }: TopicsSectionProps) {
   };
 
   // If dynamic categories from API are available, use them; otherwise fallback to static topics
-  const hasDynamic = categories && categories.length > 0;
-  const items = hasDynamic
-    ? categories.slice(0, 4).map((cat, idx) => ({
-        slug: cat.slug,
-        title: cat.name,
-        description: cat.subheading || cat.heading || "Key perspectives and insights.",
-        image: resolveImageUrl(cat.image, "/images/investment.png"),
-        imageAlt: cat.name,
-        number: `0${idx + 1}`,
-      }))
-    : fallbackTopics.filter((t) => t.home).map((t, idx) => ({
+  // const hasDynamic = categories && categories.length > 0;
+  const items = fallbackTopics.filter((t) => t.home).map((t, idx) => ({
         slug: t.slug,
         title: t.title,
         description: t.description,
         image: t.image,
         imageAlt: t.imageAlt,
         number: `0${idx + 1}`,
+        href: t.href
       }));
 
   return (
@@ -53,7 +45,7 @@ export function TopicsSection({ data, categories }: TopicsSectionProps) {
         />
         <div className="topic-grid">
           {items.map((item) => (
-            <Link key={item.slug} href={`/writing/${item.slug}`} className="topic-card">
+            <Link key={item.slug} href={item?.href} className="topic-card">
               <Image
                 src={item.image}
                 alt={item.imageAlt}

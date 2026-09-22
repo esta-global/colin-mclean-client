@@ -1,5 +1,5 @@
 export type ContentBlock = { type: "paragraph"; text: string } | { type: "list"; items: string[]; ordered?: boolean } | { type: "quote"; text: string } | { type: "subheading"; text: string } | { type: "table"; caption: string; headings: string[]; rows: string[][] } | { type: "link"; text: string; href: string };
 export type ContentSection = { id: string; heading: string; blocks: ContentBlock[] };
 export type Post = { slug: string; title: string; description: string; excerpt: string; category: string; topic: string; tags: string[]; author: string; publishedAt: string; updatedAt: string; featured: boolean; home?: boolean; demo: boolean; image: string; imageAlt: string; imageCaption: string; intro: string; sections: ContentSection[]; readingTime: number };
-export type Topic = { slug: string; title: string; description: string; introduction: string; image: string; imageAlt: string; subtopics: string[]; home: boolean };
+export type Topic = { slug: string; title: string; description: string; introduction: string; image: string; imageAlt: string; subtopics: string[]; home: boolean , href:string };
 export type Lecture = { slug: string; title: string; description: string; introduction: string; image: string; imageAlt: string; updatedAt: string; sections: ContentSection[] };

@@ -18,7 +18,7 @@ export function LecturesSection({ data }: LecturesSectionProps) {
     items: fallbackLectures,
   };
 
-  const items = section.items && section.items.length > 0 ? section.items : fallbackLectures;
+  const items = fallbackLectures;
 
   return (
     <section className="home-section lectures-section" aria-labelledby="lectures-title">

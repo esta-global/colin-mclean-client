@@ -4,6 +4,12 @@ const rawApiUrl =
 // Ensure no trailing slashes in API_BASE_URL
 export const API_BASE_URL = rawApiUrl.replace(/\/+$/, "");
 
+const rawFileUrl =
+  process.env.NEXT_PUBLIC_FILE_URL ||
+  API_BASE_URL.replace(/\/api(\/v\d+)?\/?$/i, "") + "/uploads";
+
+export const FILE_BASE_URL = rawFileUrl.replace(/\/+$/, "");
+
 /**
  * Builds a clean API URL without double slashes
  */
