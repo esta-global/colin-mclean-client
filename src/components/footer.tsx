@@ -61,9 +61,6 @@ export async function Footer() {
               <li>
                 <Link href="/contact">Contact</Link>
               </li>
-              <li>
-                <a href="/rss.xml">RSS feed</a>
-              </li>
             </ul>
           </nav>
         </div>

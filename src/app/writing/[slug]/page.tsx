@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return pageMetadata({
     title: `${category.name} | Colin McLean`,
-    description: category.subheading,
+    description: category.subheading || category.description || "",
     path: `/writing/${category.slug}`,
     image: category.image,
     imageAlt: category.imageAlt,

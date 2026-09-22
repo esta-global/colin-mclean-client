@@ -9,6 +9,7 @@ import {
   categories as staticCategories,
   popularPosts as staticPopularPosts,
 } from "@/content/writing";
+import { cleanBlogHtml, stripHtmlToText } from "@/lib/category-service";
 
 interface BlogDetailsProps {
   post: WritingPost;
@@ -48,6 +49,10 @@ export function BlogDetails({
   const shareUrl = typeof window !== "undefined" ? encodeURIComponent(window.location.href) : "";
   const shareText = encodeURIComponent(post.title);
 
+  const safeHtml = cleanBlogHtml(post.htmlContent);
+  const safeSubtitle = stripHtmlToText(post.excerpt);
+  const safeTitle = stripHtmlToText(post.title) || post.title;
+
   return (
     <div className="blog-detail-wrapper">
       <div className="container blog-detail-container">
@@ -69,7 +74,7 @@ export function BlogDetails({
             </li>
             <li className="separator">›</li>
             <li className="current" aria-current="page">
-              {post.title}
+              {safeTitle}
             </li>
           </ol>
         </nav>
@@ -77,8 +82,8 @@ export function BlogDetails({
         {/* Main Article Header */}
         <header className="blog-post-header">
           <p className="blog-category-tag">{post.category}</p>
-          <h1 className="blog-post-title">{post.title}</h1>
-          <p className="blog-post-subtitle">{post.excerpt}</p>
+          <h1 className="blog-post-title">{safeTitle}</h1>
+          {safeSubtitle && <p className="blog-post-subtitle">{safeSubtitle}</p>}
 
           <div className="blog-author-meta">
             <div className="blog-author-avatar">
@@ -106,7 +111,7 @@ export function BlogDetails({
             <div className="blog-featured-image-wrapper">
               <Image
                 src={post.image}
-                alt={post.imageAlt}
+                alt={post.imageAlt || safeTitle}
                 width={960}
                 height={540}
                 priority
@@ -116,10 +121,10 @@ export function BlogDetails({
 
             {/* Post Content */}
             <div className="blog-body-text">
-              {post.htmlContent ? (
+              {safeHtml ? (
                 <div
                   className="blog-html-content"
-                  dangerouslySetInnerHTML={{ __html: post.htmlContent }}
+                  dangerouslySetInnerHTML={{ __html: safeHtml }}
                 />
               ) : post.content ? (
                 <>

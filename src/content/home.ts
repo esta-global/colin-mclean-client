@@ -28,7 +28,7 @@ export const perspectives: Perspective[] = [
   {
     title: "Finance is failing Gen Z",
     category: "Public policy",
-    href: "/writing/public-policy/fixing-finance-for-generation-z-building-a-more-flexible-financial-future",
+    href: "/writing/public-policy/fxing-finance-for-Generation-Z",
   },
   {
     title: "AI drives growth in micro enterprises",
@@ -61,7 +61,7 @@ export const essays: Essay[] = [
     readingTime: "5 min read",
     image: "/images/essay-economy.png",
     imageAlt: "City skyline at sunset",
-    href: "/writing/economics/us-trade-policy-and-the-debate-on-sustainable-growth",
+    href: "/writing/economics/us-trade-policy-fuels-and-the-debate-on-sustainable-growth",
   },
   {
     title: "Sound analysis is key to the long term",
@@ -71,7 +71,7 @@ export const essays: Essay[] = [
     readingTime: "6 min read",
     image: "/images/essay-markets.png",
     imageAlt: "Financial chart with stacked coins",
-    href: "/writing/economics/companies-are-not-living",
+    href: "/writing/economics/companies-arent-living-as-long-now-should-investors-worry",
   },
   {
     title: "Scotland’s economy and health",
@@ -92,7 +92,7 @@ export const lectures: LecturePreview[] = [
     description: "How human behaviour shapes investment decisions.",
     image: "/images/lecture-finance.png",
     imageAlt: "A speaker presenting to an audience",
-    href: "/writing/business/behavioural-finance-understanding-bias-investment-stories-and-corporate-reporting-introduction",
+    href: "/writing/business/university-of-glasgow-talk-january-2022",
   },
   {
     number: "02",

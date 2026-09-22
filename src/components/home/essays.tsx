@@ -5,6 +5,7 @@ import { SectionTitle } from "./section-title";
 import { essays as defaultEssays } from "@/content/home";
 import type { HomepageData } from "@/lib/homepage-service";
 import type { WritingPost } from "@/content/writing";
+import { stripHtmlToText } from "@/lib/category-service";
 
 type EssaysSectionProps = {
   data?: HomepageData["essaysPreviewSection"];
@@ -39,7 +40,8 @@ export function EssaysSection({ data }: EssaysSectionProps) {
         />
         <div className="essay-grid">
           {items.map((item) => {
-            const paragraph = (item as any).paragraph || (item as any).excerpt || "";
+            const paragraph = stripHtmlToText((item as any).paragraph || (item as any).excerpt || "");
+            const title = stripHtmlToText(item.title) || item.title;
             return (
               <article key={item.href} className="essay-card">
                 <Link
@@ -50,7 +52,7 @@ export function EssaysSection({ data }: EssaysSectionProps) {
                 >
                   <Image
                     src={item.image}
-                    alt={item.title}
+                    alt={title}
                     fill
                     sizes="(max-width: 760px) 100vw, 25vw"
                   />
@@ -59,9 +61,9 @@ export function EssaysSection({ data }: EssaysSectionProps) {
                   <div>
                     <p className="card-category">{item.category}</p>
                     <h3 className="line-clamp-2">
-                      <Link href={item.href}>{item.title}</Link>
+                      <Link href={item.href}>{title}</Link>
                     </h3>
-                    <p className="para line-clamp-4">{paragraph}</p>
+                    {paragraph && <p className="para line-clamp-4">{paragraph}</p>}
                   </div>
                   <div className="flex items-center justify-between mt-4">
                     <p className="essay-meta">

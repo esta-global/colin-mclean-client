@@ -27,6 +27,50 @@ export interface ApiBlogItem {
   featured?: boolean;
 }
 
+export function stripHtmlToText(html?: string): string {
+  if (!html) return "";
+  return html
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export function cleanBlogHtml(rawHtml?: string): string | undefined {
+  if (!rawHtml) return undefined;
+
+  let html = rawHtml;
+
+  // If tags are encoded as &lt;p&gt; or &lt;div&gt;, decode them so real HTML renders
+  let iterations = 0;
+  while (iterations < 2 && /&lt;\/?[a-z][a-z0-9]*\b[^&gt;]*&gt;/i.test(html)) {
+    html = html
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&amp;/g, "&");
+    iterations++;
+  }
+
+  // Unwrap accidental nested <p><p> or <p><div> or <p><h1-6>
+  html = html
+    .replace(/<p>\s*<p>/gi, "<p>")
+    .replace(/<\/p>\s*<\/p>/gi, "</p>")
+    .replace(/<p>\s*(<(?:h[1-6]|div|figure|blockquote|ul|ol|table)[\s>])/gi, "$1")
+    .replace(/(<\/(?:h[1-6]|div|figure|blockquote|ul|ol|table)>)\s*<\/p>/gi, "$1");
+
+  // Normalize image URLs
+  return normalizeHtmlImages(html);
+}
+
 function normalizeHtmlImages(html?: string): string | undefined {
   if (!html) return undefined;
   return html.replace(
@@ -48,22 +92,34 @@ function formatDate(dateStr?: string): string {
 
 function mapApiBlogToPost(item: ApiBlogItem, fallbackCatSlug = "economics"): WritingPost {
   const catSlug = item.category?.slug || fallbackCatSlug;
+  const cleanedHtml = cleanBlogHtml(item.content);
+
+  // Clean excerpt so no tags ever show on cards, lists, or headers
+  let cleanExcerpt = stripHtmlToText(item.excerpt);
+  if (!cleanExcerpt && cleanedHtml) {
+    const textFromContent = stripHtmlToText(cleanedHtml);
+    cleanExcerpt = textFromContent.slice(0, 160) + (textFromContent.length > 160 ? "..." : "");
+  }
+
+  // Also clean title of any accidental tags
+  const cleanTitle = stripHtmlToText(item.title) || item.title;
+
   return {
     slug: item.slug,
-    title: item.title,
+    title: cleanTitle,
     category: item.category?.name || "Writing",
     categoryHref: `/writing/${catSlug}`,
-    excerpt: item.excerpt || "",
-    date: item.date || formatDate(item.createdAt),
+    excerpt: cleanExcerpt,
+    date: formatDate(item.date || item.createdAt),
     readingTime: item.readingTime || "5 min read",
     image: resolveImageUrl(item.coverImage, "/images/blog1.png"),
-    imageAlt: item.title,
+    imageAlt: cleanTitle,
     href: `/writing/${catSlug}/${item.slug}`,
     author: {
       name: item.author?.name || "Colin McLean",
       avatar: resolveImageUrl(item.author?.profileImage, "/images/portrait.png"),
     },
-    htmlContent: normalizeHtmlImages(item.content) || undefined,
+    htmlContent: cleanedHtml || undefined,
   };
 }
 
@@ -140,30 +196,51 @@ export async function fetchCategoryDetails(
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-    const res = await fetch(
+    let res = await fetch(
       buildApiUrl(`/blogCategories/findBySlug/${encodeURIComponent(targetDbSlug)}`),
       {
         next: { revalidate: 60 },
         signal: controller.signal,
       }
     );
+
+    if (!res.ok && targetDbSlug !== slug) {
+      res = await fetch(
+        buildApiUrl(`/blogCategories/findBySlug/${encodeURIComponent(slug)}`),
+        {
+          next: { revalidate: 60 },
+          signal: controller.signal,
+        }
+      );
+    }
+
     clearTimeout(timeoutId);
 
     if (res.ok) {
       const data = await res.json();
       const apiCat = data?.body;
-      if (apiCat && apiCat.name) {
+      if (apiCat && (apiCat.name || apiCat.slug)) {
+        const catDescription =
+          apiCat.subheading ||
+          apiCat.shortDescription ||
+          baseMeta?.subheading ||
+          "";
+
         return {
           id: baseMeta?.id || apiCat.slug || slug,
           name: apiCat.name || baseMeta?.name || slug,
           slug: baseMeta?.slug || apiCat.slug || slug,
           dbSlug: apiCat.slug || targetDbSlug,
           aliases: baseMeta?.aliases || [slug],
-          heading: apiCat.heading || baseMeta?.heading || apiCat.name,
-          subheading: apiCat.subheading || baseMeta?.subheading || "",
+          heading: apiCat.heading || baseMeta?.heading || apiCat.name || slug,
+          subheading: catDescription,
+          description: catDescription,
           eyebrow: apiCat.eyebrow || baseMeta?.eyebrow || "Category",
-          image: resolveImageUrl(apiCat.image, baseMeta?.image || "/images/investment.png"),
-          imageAlt: baseMeta?.imageAlt || apiCat.name,
+          image: resolveImageUrl(
+            apiCat.image,
+            baseMeta?.image || "/images/investment.png"
+          ),
+          imageAlt: baseMeta?.imageAlt || apiCat.heading || apiCat.name || slug,
         };
       }
     }

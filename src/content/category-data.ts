@@ -6,6 +6,7 @@ export type CategoryMeta = {
   aliases: string[];
   heading: string;
   subheading: string;
+  description?: string;
   image: string;
   imageAlt: string;
   eyebrow: string;

@@ -8,6 +8,7 @@ import {
   type WritingPost,
   categories as staticCategories,
 } from "@/content/writing";
+import { stripHtmlToText } from "@/lib/category-service";
 import { ArticleCard } from "@/components/writing/article-card";
 import { Arrow } from "@/components/ui";
 import type { DynamicCategoryItem } from "@/lib/nav-service";
@@ -87,6 +88,7 @@ export function CategoryPage({
           fill
           priority
           sizes="100vw"
+          unoptimized={category.image?.startsWith("http")}
         />
         <div className="writing-hero-shade" />
         <div className="writing-hero-content container">
@@ -99,6 +101,7 @@ export function CategoryPage({
           </h1>
           <p>
             {category.subheading ||
+              category.description ||
               `Insights and perspectives from Colin McLean on ${category.name.toLowerCase()}, investing, economics and society.`}
           </p>
           <a href="#latest-posts" className="button">
@@ -135,9 +138,9 @@ export function CategoryPage({
                       <div className="writing-featured-copy">
                         <p className="writing-category">{featured.category || category.name}</p>
                         <h3>
-                          <Link href={featured.href}>{featured.title}</Link>
+                          <Link href={featured.href}>{stripHtmlToText(featured.title) || featured.title}</Link>
                         </h3>
-                        <p>{featured.excerpt}</p>
+                        <p>{stripHtmlToText(featured.excerpt)}</p>
                         <span>
                           {featured.date} · {featured.readingTime}
                         </span>

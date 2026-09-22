@@ -8,6 +8,7 @@ import {
   categories as staticCategories,
   type WritingPost,
 } from "@/content/writing";
+import { stripHtmlToText } from "@/lib/category-service";
 import { Arrow } from "@/components/ui";
 import { ArticleCard } from "./article-card";
 import type { DynamicCategoryItem } from "@/lib/nav-service";
@@ -117,9 +118,9 @@ export function WritingPage({ posts, categories: dynamicCategories }: WritingPag
                       <div className="writing-featured-copy">
                         <p className="writing-category">{featured.category}</p>
                         <h3>
-                          <Link href={featured.href}>{featured.title}</Link>
+                          <Link href={featured.href}>{stripHtmlToText(featured.title) || featured.title}</Link>
                         </h3>
-                        <p>{featured.excerpt}</p>
+                        <p>{stripHtmlToText(featured.excerpt)}</p>
                         <span>
                           {featured.date} · {featured.readingTime}
                         </span>
