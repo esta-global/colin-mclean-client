@@ -27,7 +27,7 @@ export function ContactPage() {
           <h2 id="linkedin-title">Connect on LinkedIn</h2>
           <span className="contact-card-rule" />
           <p>Prefer to connect directly? You can also reach out via LinkedIn and send a message.</p>
-          <a href={site.linkedIn} target="_blank" rel="noopener noreferrer" className="linkedin-button">
+          <a href="https://linkedin.com/in/colin-w-mclean" target="_blank" rel="noopener noreferrer" className="linkedin-button">
             <LinkedInIcon />
             Connect on LinkedIn
             <span aria-hidden="true">→</span>

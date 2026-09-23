@@ -92,7 +92,7 @@ export function LecturesSection({ data }: LecturesSectionProps) {
                     )}
                   </h3>
                   <p>{lecture.description}</p>
-                    <Link href={targetLink} className="text-link">
+                    <Link href={targetLink} target="_blank" className="text-link">
                       Explore lecture <Arrow />
                     </Link>
                 </div>

@@ -272,7 +272,7 @@ export function ContactForm() {
           pattern="[0-9]*"
           maxLength={11}
           autoComplete="tel"
-          placeholder="Phone (11 digits)"
+          placeholder="Phone"
           value={values.phone}
           onChange={handlePhoneChange}
           onKeyDown={handlePhoneKeyDown}
