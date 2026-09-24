@@ -48,6 +48,9 @@ export function cleanBlogHtml(rawHtml?: string): string | undefined {
 
   let html = rawHtml;
 
+  // Fix malformed tag closures such as </p>p>
+  html = html.replace(/<\/p>\s*p>/gi, "</p><p>");
+
   // If tags are encoded as &lt;p&gt; or &lt;div&gt;, decode them so real HTML renders
   let iterations = 0;
   while (iterations < 2 && /&lt;\/?[a-z][a-z0-9]*\b[^&gt;]*&gt;/i.test(html)) {

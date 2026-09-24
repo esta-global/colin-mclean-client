@@ -18,7 +18,8 @@ export function LecturesSection({ data }: LecturesSectionProps) {
     items: fallbackLectures,
   };
 
-  const items = fallbackLectures;
+  const items =
+    section.items && section.items.length > 0 ? section.items : fallbackLectures;
 
   return (
     <section className="home-section lectures-section" aria-labelledby="lectures-title">
@@ -92,9 +93,20 @@ export function LecturesSection({ data }: LecturesSectionProps) {
                     )}
                   </h3>
                   <p>{lecture.description}</p>
-                    <Link href={targetLink} target="_blank" className="text-link">
-                      Explore lecture <Arrow />
-                    </Link>
+                    {isPdf ? (
+                      <a
+                        href={targetLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-link"
+                      >
+                        Explore lecture <Arrow />
+                      </a>
+                    ) : (
+                      <Link href={targetLink} className="text-link">
+                        Explore lecture <Arrow />
+                      </Link>
+                    )}
                 </div>
               </article>
             );

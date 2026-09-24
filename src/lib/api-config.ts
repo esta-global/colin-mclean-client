@@ -1,5 +1,11 @@
+const defaultLocalApiUrl = "http://localhost:5900/api/v1";
+const defaultProductionApiUrl = "https://colin-mclean-api.esta-dev.com/api/v1";
+
 const rawApiUrl =
-  process.env.NEXT_PUBLIC_API_URL || "https://colin-mclean-api.esta-dev.com/api/v1";
+  process.env.NEXT_PUBLIC_API_URL ||
+  (process.env.NODE_ENV === "development"
+    ? defaultLocalApiUrl
+    : defaultProductionApiUrl);
 
 // Ensure no trailing slashes in API_BASE_URL
 export const API_BASE_URL = rawApiUrl.replace(/\/+$/, "");

@@ -7,6 +7,8 @@ import type { HomepageData } from "@/lib/homepage-service";
 import type { WritingPost } from "@/content/writing";
 import { stripHtmlToText } from "@/lib/category-service";
 
+import { resolveImageUrl } from "@/lib/homepage-service";
+
 type EssaysSectionProps = {
   data?: HomepageData["essaysPreviewSection"];
   essays?: WritingPost[];
@@ -14,20 +16,35 @@ type EssaysSectionProps = {
 
 export function EssaysSection({ data }: EssaysSectionProps) {
   const section = {
-    eyebrow:
-      data?.eyebrow && data.eyebrow.toLowerCase() !== "recent blogs"
-        ? data.eyebrow
-        : "Recent writing",
-    title:
-      data?.title && data.title.toLowerCase() !== "blogs"
-        ? data.title
-        : "Essays",
+    eyebrow: data?.eyebrow || "Recent writing",
+    title: data?.title || "Essays",
     description:
       data?.description ||
       "Recent articles, insights and commentary on markets, business,behaviour and public policy.",
   };
 
-  const items = defaultEssays;
+  const items =
+    data?.items && data.items.length > 0
+      ? data.items.map((item, idx) => ({
+          key: `essay-${idx}-${item.href || item.title}`,
+          title: item.title,
+          paragraph: item.paragraph || "",
+          category: item.category || "General",
+          date: item.date || "",
+          readingTime: item.readingTime || "",
+          image: resolveImageUrl(item.image, "/images/essay-behaviour.png"),
+          href: item.href || "#",
+        }))
+      : defaultEssays.map((item) => ({
+          key: item.href,
+          title: item.title,
+          paragraph: item.paragraph || "",
+          category: item.category,
+          date: item.date,
+          readingTime: item.readingTime,
+          image: resolveImageUrl(item.image, "/images/essay-behaviour.png"),
+          href: item.href,
+        }));
 
   return (
     <section className="home-section essays-section" aria-labelledby="essays-title">
@@ -40,10 +57,10 @@ export function EssaysSection({ data }: EssaysSectionProps) {
         />
         <div className="essay-grid">
           {items.map((item) => {
-            const paragraph = stripHtmlToText((item as any).paragraph || (item as any).excerpt || "");
+            const paragraph = stripHtmlToText(item.paragraph || "");
             const title = stripHtmlToText(item.title) || item.title;
             return (
-              <article key={item.href} className="essay-card">
+              <article key={item.key} className="essay-card">
                 <Link
                   href={item.href}
                   className="essay-card-image"
@@ -59,7 +76,7 @@ export function EssaysSection({ data }: EssaysSectionProps) {
                 </Link>
                 <div className="essay-card-body">
                   <div>
-                    <p className="card-category">{item.category}</p>
+                    {item.category && <p className="card-category">{item.category}</p>}
                     <h3 className="line-clamp-2">
                       <Link href={item.href}>{title}</Link>
                     </h3>
@@ -67,7 +84,7 @@ export function EssaysSection({ data }: EssaysSectionProps) {
                   </div>
                   <div className="flex items-center justify-between mt-4">
                     <p className="essay-meta">
-                      {item.date} · {item.readingTime}
+                      {[item.date, item.readingTime].filter(Boolean).join(" · ")}
                     </p>
                     <Link href={item.href} className="text-link">
                       Read <Arrow />

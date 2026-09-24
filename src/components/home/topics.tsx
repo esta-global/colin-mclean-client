@@ -19,17 +19,26 @@ export function TopicsSection({ data, categories }: TopicsSectionProps) {
       "A broad set of interests connected by a focus on markets, people, economic change and the decisions that shape society.",
   };
 
-  // If dynamic categories from API are available, use them; otherwise fallback to static topics
-  // const hasDynamic = categories && categories.length > 0;
-  const items = fallbackTopics.filter((t) => t.home).map((t, idx) => ({
-        slug: t.slug,
-        title: t.title,
-        description: t.description,
-        image: t.image,
-        imageAlt: t.imageAlt,
-        number: `0${idx + 1}`,
-        href: t.href
-      }));
+  const items =
+    data?.items && data.items.length > 0
+      ? data.items.map((t, idx) => ({
+          key: `topic-${t.number || idx}-${t.title}`,
+          title: t.title,
+          description: t.description,
+          image: resolveImageUrl(t.image, "/images/investment.png"),
+          imageAlt: t.title,
+          number: t.number || `0${idx + 1}`,
+          href: t.href || "#",
+        }))
+      : fallbackTopics.filter((t) => t.home).map((t, idx) => ({
+          key: t.slug,
+          title: t.title,
+          description: t.description,
+          image: t.image,
+          imageAlt: t.imageAlt,
+          number: `0${idx + 1}`,
+          href: t.href,
+        }));
 
   return (
     <section className="home-section topics-section" aria-labelledby="topics-title">
@@ -45,7 +54,7 @@ export function TopicsSection({ data, categories }: TopicsSectionProps) {
         />
         <div className="topic-grid">
           {items.map((item) => (
-            <Link key={item.slug} href={item?.href} className="topic-card">
+            <Link key={item.key} href={item?.href} className="topic-card">
               <Image
                 src={item.image}
                 alt={item.imageAlt}

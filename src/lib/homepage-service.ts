@@ -37,6 +37,24 @@ export function resolveImageUrl(image?: string, fallback = "/images/hero.webp"):
 }
 
 
+export interface TopicCardItem {
+  number?: string;
+  title: string;
+  description: string;
+  image: string;
+  href: string;
+}
+
+export interface EssayCardItem {
+  title: string;
+  paragraph?: string;
+  category?: string;
+  date?: string;
+  readingTime?: string;
+  image: string;
+  href: string;
+}
+
 export interface HomepageData {
   heroSection: {
     eyebrow: string;
@@ -58,6 +76,7 @@ export interface HomepageData {
     eyebrow: string;
     title: string;
     description: string;
+    items?: TopicCardItem[];
   };
   aboutPreviewSection: {
     heading: string;
@@ -72,6 +91,7 @@ export interface HomepageData {
     eyebrow: string;
     title: string;
     description: string;
+    items?: EssayCardItem[];
   };
   lecturesSection: {
     eyebrow: string;
@@ -189,15 +209,28 @@ export async function fetchHomepageData(): Promise<HomepageData> {
             description:
               body.perspectivesSection?.description ||
               fallbackHomepageData.perspectivesSection.description,
-            items: fallbackHomepageData.perspectivesSection.items,
+            items:
+              Array.isArray(body.perspectivesSection?.items) &&
+              body.perspectivesSection.items.length > 0
+                ? body.perspectivesSection.items
+                : fallbackHomepageData.perspectivesSection.items,
           },
           topicsSection: {
             eyebrow:
               body.topicsSection?.eyebrow || fallbackHomepageData.topicsSection.eyebrow,
-            title: fallbackHomepageData.topicsSection.title,
+            title:
+              body.topicsSection?.title || fallbackHomepageData.topicsSection.title,
             description:
               body.topicsSection?.description ||
               fallbackHomepageData.topicsSection.description,
+            items:
+              Array.isArray(body.topicsSection?.items) &&
+              body.topicsSection.items.length > 0
+                ? body.topicsSection.items.map((it: any) => ({
+                    ...it,
+                    image: resolveImageUrl(it.image, "/images/investment.png"),
+                  }))
+                : undefined,
           },
           aboutPreviewSection: {
             heading:
@@ -227,18 +260,22 @@ export async function fetchHomepageData(): Promise<HomepageData> {
           },
           essaysPreviewSection: {
             eyebrow:
-              body.essaysPreviewSection?.eyebrow &&
-              body.essaysPreviewSection.eyebrow.toLowerCase() !== "recent blogs"
-                ? body.essaysPreviewSection.eyebrow
-                : fallbackHomepageData.essaysPreviewSection.eyebrow,
+              body.essaysPreviewSection?.eyebrow ||
+              fallbackHomepageData.essaysPreviewSection.eyebrow,
             title:
-              body.essaysPreviewSection?.title &&
-              body.essaysPreviewSection.title.toLowerCase() !== "blogs"
-                ? body.essaysPreviewSection.title
-                : fallbackHomepageData.essaysPreviewSection.title,
+              body.essaysPreviewSection?.title ||
+              fallbackHomepageData.essaysPreviewSection.title,
             description:
               body.essaysPreviewSection?.description ||
               fallbackHomepageData.essaysPreviewSection.description,
+            items:
+              Array.isArray(body.essaysPreviewSection?.items) &&
+              body.essaysPreviewSection.items.length > 0
+                ? body.essaysPreviewSection.items.map((it: any) => ({
+                    ...it,
+                    image: resolveImageUrl(it.image, "/images/essay-behaviour.png"),
+                  }))
+                : undefined,
           },
           lecturesSection: {
             eyebrow:
