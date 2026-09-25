@@ -51,8 +51,7 @@ export async function Footer() {
             <ul>
               <li>
                 <a
-                  href={site.linkedIn}
-                  target="_blank"
+                  href="https://linkedin.com/in/colin-w-mclean" target="_blank"
                   rel="noopener noreferrer"
                 >
                   LinkedIn ↗

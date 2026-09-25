@@ -76,10 +76,23 @@ export function cleanBlogHtml(rawHtml?: string): string | undefined {
 
 function normalizeHtmlImages(html?: string): string | undefined {
   if (!html) return undefined;
-  return html.replace(
+  let normalized = html.replace(
     /(<img[^>]+src=["'])(?:\/?uploads\/)([^"']+["'])/gi,
     `$1${FILE_BASE_URL}/$2`
   );
+  normalized = normalized.replace(
+    /(<object[^>]+data=["'])(?:\/?uploads\/)([^"']+["'])/gi,
+    `$1${FILE_BASE_URL}/$2`
+  );
+  normalized = normalized.replace(
+    /(<iframe[^>]+src=["'])(?:\/?uploads\/)([^"']+["'])/gi,
+    `$1${FILE_BASE_URL}/$2`
+  );
+  normalized = normalized.replace(
+    /(<a[^>]+href=["'])(?:\/?uploads\/)([^"']+["'])/gi,
+    `$1${FILE_BASE_URL}/$2`
+  );
+  return normalized;
 }
 
 function formatDate(dateStr?: string): string {
