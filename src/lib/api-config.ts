@@ -1,5 +1,5 @@
 const defaultLocalApiUrl = "http://localhost:5900/api/v1";
-const defaultProductionApiUrl = "https://colin-mclean-api.esta-dev.com/api/v1";
+const defaultProductionApiUrl = "https://api.articlesbycolin.com/api/v1";
 
 const rawApiUrl =
   process.env.NEXT_PUBLIC_API_URL ||
